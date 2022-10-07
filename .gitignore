@@ -143,3 +143,4 @@ dist
 .firebase
 .firebaserc
 *.rules
+firebase.json
