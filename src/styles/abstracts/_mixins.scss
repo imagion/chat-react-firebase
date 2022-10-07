@@ -1,0 +1,62 @@
+@use '../vendor' as *;
+@use 'breakpoints' as *;
+
+// MIXINS
+// ==========
+
+// Mappy Breakpoint shortcuts
+// ----------
+// Convenience mixin for Mappy Breakpoints
+@mixin bp(
+  $queries,
+  $type: all,
+  $query-fallback: null,
+  $breakpoints: $breakpoints
+) {
+  @include mappy-bp($queries, $type, $query-fallback, $breakpoints) {
+    @content;
+  }
+}
+
+// Is-invisible
+// ------------
+// Makes element invisible, but still accessible
+// - http://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+@mixin is-invisible {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+// Is-visible
+// ----------
+// Turns off the element-invisible effect.
+@mixin is-visible {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: auto;
+  clip: auto;
+}
+
+@mixin lobo {
+  & + *,
+  * + & {
+    @content;
+  }
+}
+
+// Selection
+// ---------
+// Changes selected color and background color
+@mixin selection($bg-color, $text-color) {
+  &::selection {
+    background: $bg-color;
+    color: $text-color;
+  }
+}

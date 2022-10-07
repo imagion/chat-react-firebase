@@ -1,0 +1,138 @@
+@use '../abstracts' as *;
+
+// Navigation styles
+// ==========
+
+.navbar {
+  &-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__logo {
+    --font-weight: 600;
+    --c: var(--clr-grey-800);
+    --clr-ha: var(--clr-grey-800);
+    font-size: 2rem;
+    text-transform: uppercase;
+  }
+
+  &__toggle {
+    position: relative;
+    z-index: 200;
+    cursor: pointer;
+
+    * {
+      display: block;
+      width: 2.25rem;
+      height: 0.25rem;
+      background-color: var(--clr-grey-800);
+      border-radius: 1rem;
+      transition: transform 0.25s ease-in-out, opacity 0.15s;
+
+      + * {
+        margin-top: 0.5rem;
+      }
+    }
+
+    &.open {
+      :nth-child(1) {
+        transform: rotate(45deg) translate(8px, 9px);
+      }
+      :nth-child(2) {
+        width: 0;
+        opacity: 0;
+      }
+      :nth-child(3) {
+        transform: rotate(-45deg) translate(8px, -9px);
+      }
+    }
+
+    @include bp(med) {
+      display: none;
+    }
+  }
+
+  &-main {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    height: 100vh;
+    padding: 6rem 3.5rem 1.5rem;
+    background-color: var(--clr-primary-200);
+    transition: transform 0.25s ease-in-out;
+    transform: translateX(100%);
+    will-change: transform;
+
+    &.open {
+      transform: none;
+    }
+
+    @include bp(med) {
+      position: revert;
+      height: revert;
+      padding: revert;
+      background-color: revert;
+      transform: revert;
+      will-change: revert;
+    }
+  }
+}
+
+.navigation {
+  &__menu {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+
+    @include bp(med) {
+      flex-direction: revert;
+    }
+  }
+
+  &__item {
+    display: inline-block;
+
+    @include bp(med) {
+      + li {
+        margin-left: 1.5rem;
+      }
+    }
+  }
+}
+
+.navlink {
+  position: relative;
+  display: inline-block;
+  text-transform: uppercase;
+  transition: color 0.15s;
+}
+
+.navbar {
+  .navlink {
+    --font-weight: 700;
+    --c: var(--clr-grey-300);
+    padding: 0.5em 0.5em;
+    font-size: 1.25rem;
+
+    @include bp(med) {
+      --c: var(--clr-grey-700);
+      --clr-hfa: var(--clr-grey-900);
+      padding: revert;
+    }
+  }
+}
+
+.mode-toggle {
+  display: flex;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.mode-toggle-icon {
+  fill: var(--icon-mode-toggle);
+}

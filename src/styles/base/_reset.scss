@@ -1,0 +1,36 @@
+// Base reset
+// ==========
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--base-background, var(--clr-common-white));
+}
+
+#root {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  align-items: start;
+}
+
+:focus-visible {
+  outline: 0.25rem dotted var(--clr-primary-300);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

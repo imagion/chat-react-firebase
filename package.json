@@ -1,0 +1,29 @@
+{
+  "name": "chat-react-firebase",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "firebase": "^9.10.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.1"
+  },
+  "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^5.0.0",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@vitejs/plugin-react": "^2.1.0",
+    "mappy-breakpoints": "^0.2.4",
+    "normalize.css": "^8.0.1",
+    "postcss-load-config": "^4.0.1",
+    "sass": "^1.55.0",
+    "the-new-css-reset": "^1.7.3",
+    "vite": "^3.1.0"
+  }
+}

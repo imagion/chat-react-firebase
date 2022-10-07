@@ -1,0 +1,19 @@
+@use 'sass:list';
+
+// Functions
+// ==========
+
+// Strips unit
+// ---------
+// If you want to remove the unit of value
+@function strip-unit($num) {
+  @return $num / ($num * 0 + 1);
+}
+
+// Contains
+// ---------
+// If you need to check if an element is in a list
+// or figure out what index it’s at
+@function contains($list, $var) {
+  @return list.index($list, $var);
+}
