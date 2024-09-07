@@ -3,7 +3,7 @@ import DiscordLogo from '@/public/discord.svg';
 
 export default function Tree() {
   return (
-    <nav className='flex w-[72px] flex-col items-center overflow-hidden bg-[#1e1f22] pt-3'>
+    <nav className='flex w-16 flex-col items-center overflow-hidden bg-stone-800 pt-3'>
       <div className='tree__list-item mb-2'>
         <DiscordLogo width={30} height={30} />
       </div>
@@ -16,5 +16,3 @@ export default function Tree() {
     </nav>
   );
 }
-
-console.log('Hello');

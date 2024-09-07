@@ -4,7 +4,37 @@
 
 @layer components {
   .tree__list-item {
-    @apply flex size-12 items-center justify-center rounded-full bg-[#313338] text-[#dbdee1] transition-colors;
+    @apply flex size-12 items-center justify-center rounded-full bg-zinc-700 transition-colors;
+  }
+  .scroller {
+    --scrollbar-color-thumb: #222222;
+    --scrollbar-color-track: transparent;
+    --scrollbar-width: thin;
+    --scrollbar-width-legacy: 10px;
+  }
+  @supports (scrollbar-width: auto) {
+    .scroller {
+      scrollbar-color: var(--scrollbar-color-thumb) var(--scrollbar-color-track);
+      scrollbar-width: var(--scrollbar-width);
+    }
+  }
+  @supports selector(::-webkit-scrollbar) {
+    .scroller::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-color-thumb);
+    }
+    .scroller::-webkit-scrollbar-track {
+      background: var(--scrollbar-color-track);
+    }
+    .scroller::-webkit-scrollbar {
+      max-width: var(--scrollbar-width-legacy);
+      max-height: var(--scrollbar-width-legacy);
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply text-neutral-50;
   }
 }
 
