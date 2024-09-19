@@ -30,6 +30,18 @@
       max-height: var(--scrollbar-width-legacy);
     }
   }
+
+  .label {
+    @apply mb-2 block cursor-pointer text-xs font-bold uppercase text-neutral-200;
+  }
+
+  .label-star {
+    @apply after:ml-1 after:text-red-600 after:content-["*"];
+  }
+
+  .input {
+    @apply w-full rounded border-0 bg-neutral-800 p-2 text-base;
+  }
 }
 
 @layer base {

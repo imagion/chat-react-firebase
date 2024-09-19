@@ -29,7 +29,7 @@ export default function Sidebar() {
         <div className='relative flex h-12 items-center px-2 text-sm font-medium'>
           <div className='relative flex h-8 w-8 items-center gap-2'>
             <img
-              className='h-full w-full rounded-full'
+              className='rounded-full'
               width='32'
               height='32'
               src='https://placehold.co/32x32'

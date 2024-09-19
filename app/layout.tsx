@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
 import './globals.css';
-import Tree from '@/components/Tree';
-import Sidebar from '@/components/Sidebar';
-import { cn } from '@/app/lib/utils';
+
+import { cn } from '@/lib/utils';
+import { AuthContextProvider } from '@/context/AuthContext';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -20,12 +20,11 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={cn('flex min-h-screen antialiased', montserrat.className)}>
-        <Tree />
-        <Sidebar />
-        <main className='relative flex flex-auto items-stretch justify-start'>
-          {children}
-        </main>
+        className={cn(
+          'relative flex min-h-screen flex-col antialiased',
+          montserrat.className,
+        )}>
+        <AuthContextProvider>{children}</AuthContextProvider>
       </body>
     </html>
   );

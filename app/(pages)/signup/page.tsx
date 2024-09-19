@@ -1,0 +1,93 @@
+'use client';
+import { useState } from 'react';
+import Link from 'next/link';
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { useSignup } from '@/hooks/useSignup';
+useSignup;
+
+export default function Login() {
+  const [email, setEmail] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [password, setPassword] = useState('');
+  const { error, isPending, signupWithEmailAndPassword, signupWithGoogle } =
+    useSignup();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    signupWithEmailAndPassword(email, password, displayName);
+  };
+
+  const handleGoogle = async (e) => {
+    e.preventDefault();
+
+    signupWithGoogle();
+  };
+
+  return (
+    <div className='flex h-screen w-screen items-center justify-center bg-gradient-to-r from-blue-800 to-indigo-900'>
+      <div className='flex min-w-[480px] flex-col gap-5 rounded bg-neutral-700 p-10 shadow-xl'>
+        <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
+          <div>
+            <label htmlFor='userEmail' className='label label-star'>
+              E-mail
+            </label>
+            <input
+              required
+              id='userEmail'
+              type='email'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className='input'
+            />
+          </div>
+          <div>
+            <label htmlFor='displayName' className='label label-star'>
+              Имя пользователя
+            </label>
+            <input
+              required
+              id='displayName'
+              type='text'
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              className='input'
+            />
+          </div>
+          <div>
+            <label htmlFor='password' className='label label-star'>
+              Пароль
+            </label>
+            <input
+              required
+              id='userPassword'
+              type='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className='input'
+            />
+          </div>
+          <div className='flex flex-col justify-center gap-2'>
+            <button type='submit' className='rounded bg-blue-500 p-2'>
+              Зарегистрироваться
+            </button>
+            <Link href='/login' className='text-sky-400'>
+              Уже зарегистрированы?
+            </Link>
+          </div>
+        </form>
+        <hr className='border-neutral-500' />
+        <button
+          onClick={handleGoogle}
+          type='submit'
+          className='rounded bg-blue-500 p-2'>
+          Войти через Google
+        </button>
+      </div>
+    </div>
+  );
+}
