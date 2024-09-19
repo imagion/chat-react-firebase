@@ -1,30 +1,22 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import { useSignup } from '@/hooks/useSignup';
-useSignup;
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [displayName, setDisplayName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const { error, isPending, signupWithEmailAndPassword, signupWithGoogle } =
     useSignup();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     signupWithEmailAndPassword(email, password, displayName);
   };
 
-  const handleGoogle = async (e) => {
+  const handleGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
     signupWithGoogle();
   };
 
@@ -72,9 +64,13 @@ export default function Login() {
             />
           </div>
           <div className='flex flex-col justify-center gap-2'>
-            <button type='submit' className='rounded bg-blue-500 p-2'>
-              Зарегистрироваться
+            <button
+              type='submit'
+              className='rounded bg-blue-500 p-2'
+              disabled={isPending}>
+              {isPending ? 'Регистристрируем...' : 'Зарегистрироваться'}
             </button>
+            {error && <p>{error}</p>}
             <Link href='/login' className='text-sky-400'>
               Уже зарегистрированы?
             </Link>
@@ -84,9 +80,13 @@ export default function Login() {
         <button
           onClick={handleGoogle}
           type='submit'
-          className='rounded bg-blue-500 p-2'>
-          Войти через Google
+          className='rounded bg-blue-500 p-2'
+          disabled={isPending}>
+          {isPending
+            ? 'Регистрируем через Google...'
+            : 'Регистрация через Google'}
         </button>
+        {error && <p>{error}</p>}
       </div>
     </div>
   );

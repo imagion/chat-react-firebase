@@ -1,7 +1,13 @@
-import Image from 'next/image';
+'use client';
+
 import React from 'react';
+import Image from 'next/image';
+import { useLogout } from '@/hooks/useLogout';
+import LogoutIcon from '@/public/logout.svg';
 
 export default function Sidebar() {
+  const { logout } = useLogout();
+
   return (
     <div className='flex w-60 flex-initial flex-col overflow-hidden bg-neutral-700'>
       <nav className='flex flex-auto flex-col'>
@@ -26,8 +32,8 @@ export default function Sidebar() {
         </div>
       </nav>
       <section className='flex flex-initial bg-zinc-800'>
-        <div className='relative flex h-12 items-center px-2 text-sm font-medium'>
-          <div className='relative flex h-8 w-8 items-center gap-2'>
+        <div className='relative flex h-12 flex-auto items-center justify-between px-2 text-sm font-medium'>
+          <div className='relative flex items-center gap-2'>
             <img
               className='rounded-full'
               width='32'
@@ -43,6 +49,10 @@ export default function Sidebar() {
               /> */}
             <div className=''>Name</div>
           </div>
+          {/* <button className='cursor-pointer p-2 text-red-600'> */}
+          <button onClick={logout} className='cursor-pointer p-2 text-red-600'>
+            <LogoutIcon width={24} height={24} />
+          </button>
         </div>
       </section>
     </div>

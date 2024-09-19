@@ -1,29 +1,47 @@
-import { useState } from 'react';
+'use client';
+
+import { useEffect, useState } from 'react';
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
   updateProfile,
+  UserCredential,
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useAuthContext } from '@/hooks/useAuthContext';
 
+type AuthAction = {
+  type: 'LOGIN';
+  payload: any; // or more specific typing if available, e.g., `payload: User`
+};
+
 export const useSignup = () => {
-  const [error, setError] = useState(null);
-  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState<boolean>(false);
+  const [isCancelled, setIsCancelled] = useState<boolean>(false);
   const { dispatch } = useAuthContext();
   const provider = new GoogleAuthProvider();
 
-  const signupWithEmailAndPassword = async (email, password, displayName) => {
+  const signupWithEmailAndPassword = async (
+    email: string,
+    password: string,
+    displayName: string,
+  ): Promise<void> => {
     setError(null);
     setIsPending(true);
 
+    // sign in user
     try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const res: UserCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
 
-      // if we have not recieved a response
+      // check if we have not recieved a response
       if (!res) {
-        throw Error('Could not complete signup');
+        throw new Error('Could not complete signup');
       }
 
       // add 'displayName' meta to newly created user
@@ -32,36 +50,53 @@ export const useSignup = () => {
       // dispatch login action
       dispatch({ type: 'LOGIN', payload: res.user });
 
-      setError(null);
-      setIsPending(false);
-    } catch (err) {
-      console.log(err.message);
-      setError(err.message);
-      setIsPending(false);
+      // update state
+      if (!isCancelled) {
+        setError(null);
+        setIsPending(false);
+      }
+    } catch (err: any) {
+      if (!isCancelled) {
+        console.log(err.message);
+        setError(err.message);
+        setIsPending(false);
+      }
     }
   };
 
-  const signupWithGoogle = async () => {
+  const signupWithGoogle = async (): Promise<void> => {
     setError(null);
     setIsPending(true);
 
+    // sign in user via google
     try {
-      const res = await signInWithPopup(auth, provider);
+      const res: UserCredential = await signInWithPopup(auth, provider);
 
+      // check if we have not recieved a response
       if (!res) {
-        throw Error('Could not complete signup');
+        throw new Error('Could not complete signup');
       }
 
       dispatch({ type: 'LOGIN', payload: res.user });
 
-      setError(null);
-      setIsPending(false);
-    } catch (err) {
-      console.log(err.message);
-      setError(err.message);
-      setIsPending(false);
+      // update state
+      if (!isCancelled) {
+        setError(null);
+        setIsPending(false);
+      }
+    } catch (err: any) {
+      if (!isCancelled) {
+        console.log(err.message);
+        setError(err.message);
+        setIsPending(false);
+      }
     }
   };
+
+  // cleanup function
+  useEffect(() => {
+    return () => setIsCancelled(true);
+  }, []);
 
   return { error, isPending, signupWithEmailAndPassword, signupWithGoogle };
 };
