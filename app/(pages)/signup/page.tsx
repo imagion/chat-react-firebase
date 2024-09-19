@@ -32,9 +32,9 @@ export default function Login() {
               required
               id='userEmail'
               type='email'
+              className='input'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className='input'
             />
           </div>
           <div>
@@ -45,9 +45,9 @@ export default function Login() {
               required
               id='displayName'
               type='text'
+              className='input'
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className='input'
             />
           </div>
           <div>
@@ -58,9 +58,9 @@ export default function Login() {
               required
               id='userPassword'
               type='password'
+              className='input'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className='input'
             />
           </div>
           <div className='flex flex-col justify-center gap-2'>
@@ -79,7 +79,6 @@ export default function Login() {
         <hr className='border-neutral-500' />
         <button
           onClick={handleGoogle}
-          type='submit'
           className='rounded bg-blue-500 p-2'
           disabled={isPending}>
           {isPending
