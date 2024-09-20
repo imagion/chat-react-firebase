@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useSignup } from '@/hooks/useSignup';
 
-export default function Login() {
+export default function Signup() {
   const [email, setEmail] = useState<string>('');
   const [displayName, setDisplayName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
