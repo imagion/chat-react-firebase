@@ -17,10 +17,6 @@ export default function RequireAuth({ children }: RequireAuthProps) {
     if (authIsReady && !user) {
       router.push('/login'); // Redirect to login page if not authenticated
     }
-
-    if (authIsReady && !user) {
-      router.push('/login');
-    }
   }, [authIsReady, user, router]);
 
   // If auth state is not ready yet, return nothing or a loading spinner

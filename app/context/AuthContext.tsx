@@ -53,7 +53,9 @@ type AuthContextProviderProps = {
   children: ReactNode;
 };
 
-export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
+export default function AuthContextProvider({
+  children,
+}: AuthContextProviderProps) {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   // get user information from firebase on first render
@@ -65,11 +67,9 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     return () => unsub();
   }, []);
 
-  console.log('AuthContext state:', state);
-
   return (
     <AuthContext.Provider value={{ state, dispatch }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
