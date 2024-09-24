@@ -9,8 +9,9 @@ export default function ChatList() {
   const { user } = state;
   const { documents, error } = useCollection(
     'chats',
-    // ['message', '!==', false],
-    // ['createdAt', 'desc'],
+    // undefined,
+    // ['createdAt', 'desc',]
+    // FIX: cause infinite loop
   );
   const { deleteDocument } = useFirestore('chats');
 

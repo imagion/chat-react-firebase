@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '@/hooks/useAuthContext';
 
@@ -9,18 +9,25 @@ interface RequireAuthProps {
 }
 
 export default function RequireAuth({ children }: RequireAuthProps) {
+  const [isChecking, setIsChecking] = useState(true);
+  const router = useRouter();
   const { state } = useAuthContext();
   const { user, authIsReady } = state;
-  const router = useRouter();
 
   useEffect(() => {
-    if (authIsReady && !user) {
-      router.push('/login'); // Redirect to login page if not authenticated
+    if (authIsReady) {
+      if (!user) {
+        // Redirect if not authenticated
+        router.push('/login');
+      } else {
+        // Stop checking once we know the user is authenticated
+        setIsChecking(false);
+      }
     }
-  }, [authIsReady, user, router]);
+  }, [authIsReady, user]);
 
   // If auth state is not ready yet, return nothing or a loading spinner
-  if (!authIsReady) {
+  if (isChecking || !authIsReady) {
     return <div>Loading...</div>;
   }
 

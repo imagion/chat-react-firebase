@@ -3,7 +3,6 @@ import { Montserrat } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import AuthContextProvider from '@/context/AuthContext';
-import RequireAuth from '@/components/RequireAuth';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -24,9 +23,7 @@ export default function RootLayout({
           'relative flex min-h-screen flex-col antialiased',
           montserrat.className,
         )}>
-        <AuthContextProvider>
-          <RequireAuth>{children}</RequireAuth>
-        </AuthContextProvider>
+        <AuthContextProvider>{children}</AuthContextProvider>
       </body>
     </html>
   );
