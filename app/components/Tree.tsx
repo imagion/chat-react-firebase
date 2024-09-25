@@ -1,4 +1,3 @@
-import React from 'react';
 import DiscordLogo from '@/public/discord.svg';
 
 export default function Tree() {

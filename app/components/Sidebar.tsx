@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import { useLogout } from '@/hooks/useLogout';
 import LogoutIcon from '@/public/logout.svg';
+import DiscordLogo from '@/public/discord.svg';
 
 export default function Sidebar() {
   const { logout } = useLogout();
@@ -34,22 +34,14 @@ export default function Sidebar() {
       <section className='flex flex-initial bg-zinc-800'>
         <div className='relative flex h-12 flex-auto items-center justify-between px-2 text-sm font-medium'>
           <div className='relative flex items-center gap-2'>
-            <img
-              className='rounded-full'
-              width='32'
-              height='32'
-              src='https://placehold.co/32x32'
-              alt='placeholder'
+            <DiscordLogo
+              width={32}
+              height={32}
+              alt='Avatar'
+              className='mt-1 rounded-full bg-neutral-300 p-1 text-indigo-600'
             />
-            {/* <Image
-                width={32}
-                height={32}
-                src={'https://placehold.co/32x32'}
-                alt={'placeholder'}
-              /> */}
-            <div className=''>Name</div>
+            <div>UserName</div>
           </div>
-          {/* <button className='cursor-pointer p-2 text-red-600'> */}
           <button onClick={logout} className='cursor-pointer p-2 text-red-600'>
             <LogoutIcon width={24} height={24} />
           </button>

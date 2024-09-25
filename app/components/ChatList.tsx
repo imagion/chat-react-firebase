@@ -1,8 +1,10 @@
 'use client';
 
+import Image from 'next/image';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import { useCollection } from '@/hooks/useCollection';
 import { useFirestore } from '@/hooks/useFirestore';
+import DiscordLogo from '@/public/discord.svg';
 
 export default function ChatList() {
   const { state } = useAuthContext();
@@ -23,13 +25,12 @@ export default function ChatList() {
       {documents &&
         documents.map((doc) => (
           <li key={doc.id} className='flex gap-2'>
-            <div>
-              <img
-                className='mt-1 rounded-full'
-                width='40'
-                height='40'
-                src='https://placehold.co/40x40'
-                alt='placeholder'
+            <div className=''>
+              <DiscordLogo
+                width={40}
+                height={40}
+                alt='Avatar'
+                className='mt-1 rounded-full bg-neutral-300 p-1 text-indigo-600'
               />
             </div>
             <div>
