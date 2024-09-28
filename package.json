@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.26.24",
     "@next/env": "^14.2.13",
     "clsx": "^2.1.1",
     "firebase": "^10.13.2",
@@ -28,12 +29,12 @@
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.20",
     "cross-env": "^7.0.3",
-    "eslint": "^9.10.0",
+    "eslint": "^8.0.0",
     "eslint-config-next": "^14.2.13",
     "postcss": "^8",
     "prettier": "^3.3.3",
-    "prettier-plugin-tailwindcss": "^0.6.6",
-    "tailwindcss": "^3.4.12",
+    "prettier-plugin-tailwindcss": "^0.6.8",
+    "tailwindcss": "^3.4.13",
     "typescript": "^5"
   }
 }

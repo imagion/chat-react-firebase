@@ -3,7 +3,7 @@
 import React from 'react';
 import { useLogout } from '@/hooks/useLogout';
 import LogoutIcon from '@/public/logout.svg';
-import DiscordLogo from '@/public/discord.svg';
+import UserProfile from '@/components/UserProfile';
 
 export default function Sidebar() {
   const { logout } = useLogout();
@@ -32,16 +32,8 @@ export default function Sidebar() {
         </div>
       </nav>
       <section className='flex flex-initial bg-zinc-800'>
-        <div className='relative flex h-12 flex-auto items-center justify-between px-2 text-sm font-medium'>
-          <div className='relative flex items-center gap-2'>
-            <DiscordLogo
-              width={32}
-              height={32}
-              alt='Avatar'
-              className='mt-1 rounded-full bg-neutral-300 p-1 text-indigo-600'
-            />
-            <div>UserName</div>
-          </div>
+        <div className='h-13 relative flex flex-auto items-center justify-between p-1 px-2 text-sm font-medium'>
+          <UserProfile />
           <button onClick={logout} className='cursor-pointer p-2 text-red-600'>
             <LogoutIcon width={24} height={24} />
           </button>
