@@ -1,27 +1,35 @@
 'use client';
 
+import { ReactNode, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { useAuthContext } from '@/hooks/useAuthContext';
 
 interface RedirectIfAuthenticatedProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function RedirectIfAuthenticated({
   children,
 }: RedirectIfAuthenticatedProps) {
+  const [isChecking, setIsChecking] = useState(true);
+  const router = useRouter();
   const { state } = useAuthContext();
   const { user, authIsReady } = state;
-  const router = useRouter();
 
   useEffect(() => {
-    if (authIsReady && user) {
-      router.push('/'); // Redirect authenticated users away from login page
+    if (authIsReady) {
+      if (user) {
+        // Redirect if already authenticated
+        router.push('/');
+      } else {
+        // Stop checking once we know the user is authenticated
+        setIsChecking(false);
+      }
     }
-  }, [authIsReady, user, router]);
+  }, [authIsReady, user]);
 
-  if (!authIsReady) {
+  // If auth state is not ready yet, return nothing or a loading spinner
+  if (isChecking || !authIsReady) {
     return <div>Loading...</div>;
   }
 
