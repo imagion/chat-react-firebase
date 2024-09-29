@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   collection,
   DocumentData,
@@ -25,22 +25,30 @@ interface UseCollectionReturn {
   error: string | null;
 }
 
+// Define the type for _query and _orderBy
+type QueryParams = [string, any, any?];
+type OrderByParams = [string, 'asc' | 'desc'];
+
 export const useCollection = (
   collectionRef: string,
-  _query?,
-  _orderBy?,
+  _query?: QueryParams,
+  _orderBy?: OrderByParams,
 ): UseCollectionReturn => {
   const [documents, setDocuments] = useState<FirestoreDocument[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Memoizing query and orderBy conditions for better performance
+  // NOTE: JSON.stringify is a common workaround to handle deep object comparison issues, especially for objects that can change by reference but not by value.
   const queryConditions = useMemo(
     () => (_query ? where(..._query) : null),
-    [_query],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [_query ? JSON.stringify(_query) : null],
   );
+
   const orderByConditions = useMemo(
     () => (_orderBy ? orderBy(..._orderBy) : null),
-    [_orderBy],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [_orderBy ? JSON.stringify(_orderBy) : null],
   );
 
   useEffect(() => {
@@ -48,28 +56,36 @@ export const useCollection = (
     if (queryConditions) conditions.push(queryConditions);
     if (orderByConditions) conditions.push(orderByConditions);
 
-    // Build the Firestore reference with query and orderBy conditions
-    const ref = query(collection(db, collectionRef), ...conditions);
+    // Safeguard for when both conditions are null
+    if (conditions.length === 0) return;
 
-    const unsub = onSnapshot(
-      ref,
-      (snapshot: QuerySnapshot<DocumentData>) => {
-        const results: FirestoreDocument[] = snapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
+    try {
+      // Build the Firestore reference with query and orderBy conditions
+      const ref = query(collection(db, collectionRef), ...conditions);
 
-        setDocuments(results);
-        setError(null);
-      },
-      (err) => {
-        console.error('Error fetching collection:', err);
-        setError('Could not fetch the data');
-      },
-    );
+      const unsubscribe = onSnapshot(
+        ref,
+        (snapshot: QuerySnapshot<DocumentData>) => {
+          const results: FirestoreDocument[] = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
 
-    // Cleanup subscription on component unmount
-    return () => unsub();
+          setDocuments(results);
+          setError(null);
+        },
+        (err) => {
+          console.error('Error fetching collection:', err);
+          setError('Could not fetch the data');
+        },
+      );
+
+      // Cleanup subscription on component unmount
+      return () => unsubscribe();
+    } catch (err) {
+      console.error('Error building query:', err);
+      setError('Could not build the query');
+    }
   }, [collectionRef, queryConditions, orderByConditions]);
 
   return { documents, error };

@@ -20,8 +20,9 @@ export default function ChatForm() {
 
   // Reset the form field when the document is successfully added
   useEffect(() => {
-    console.log('Response success changed:', response.success);
+    // console.log('Response success changed:', response.success);
     if (response.success) {
+      console.log('-------Second Render: SetMessage("")');
       setMessage('');
     }
   }, [response.success]);
