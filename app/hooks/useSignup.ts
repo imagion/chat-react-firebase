@@ -8,13 +8,9 @@ import {
   updateProfile,
   UserCredential,
 } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
 import { useAuthContext } from '@/hooks/useAuthContext';
-
-type AuthAction = {
-  type: 'LOGIN';
-  payload: any; // or more specific typing if available, e.g., `payload: User`
-};
+import { doc, setDoc } from 'firebase/firestore';
 
 export const useSignup = () => {
   const [error, setError] = useState<string | null>(null);
@@ -22,6 +18,8 @@ export const useSignup = () => {
   const [isCancelled, setIsCancelled] = useState<boolean>(false);
   const { dispatch } = useAuthContext();
   const provider = new GoogleAuthProvider();
+
+  // NOTE: maybe I can merge this functions to prevent DRY code
 
   const signupWithEmailAndPassword = async (
     email: string,
@@ -46,6 +44,13 @@ export const useSignup = () => {
 
       // add 'displayName' meta to newly created user
       await updateProfile(res.user, { displayName });
+
+      // create a user document
+      setDoc(doc(db, 'users', res.user.uid), {
+        online: true,
+        displayName,
+        photoURL: null,
+      });
 
       // dispatch login action
       dispatch({ type: 'LOGIN', payload: res.user });
