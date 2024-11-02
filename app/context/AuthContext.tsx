@@ -7,20 +7,9 @@ import {
   useEffect,
   useReducer,
 } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-
-// Define the shape of the state
-type AuthState = {
-  user: User | null;
-  authIsReady: boolean;
-};
-
-// Define the types for the action
-type AuthAction =
-  | { type: 'LOGIN'; payload: User | null }
-  | { type: 'LOGOUT' }
-  | { type: 'AUTH_IS_READY'; payload: User | null };
+import { AuthAction, AuthState } from '@/types/AuthContextTypes';
 
 // Define the initial state
 const initialState: AuthState = {

@@ -12,22 +12,12 @@ import {
   where,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-
-// Define the type for the collection's documents
-interface FirestoreDocument {
-  id: string;
-  [key: string]: any; // This allows the document to have any additional fields
-}
-
-// Type for the return value of the hook
-interface UseCollectionReturn {
-  documents: FirestoreDocument[] | null;
-  error: string | null;
-}
-
-// Define the type for _query and _orderBy
-type QueryParams = [string, any, any?];
-type OrderByParams = [string, 'asc' | 'desc'];
+import {
+  FirestoreDocument,
+  OrderByParams,
+  QueryParams,
+  UseCollectionReturn,
+} from '@/types/useCollectionTypes';
 
 export const useCollection = (
   collectionRef: string,

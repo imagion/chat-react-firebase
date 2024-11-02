@@ -35,6 +35,11 @@ const nextConfig = {
         port: '',
         pathname: '/v0/b/discord-clone-110c0.appspot.com/o/**',
       },
+      {
+        protocol: 'https',
+        hostname: '*.googleusercontent.com',
+        port: '',
+      },
     ],
   },
 };

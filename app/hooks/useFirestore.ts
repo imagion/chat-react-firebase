@@ -10,21 +10,11 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-
-// Define the shape of the Firestore state
-type FirestoreState = {
-  document: any | null; // You can replace `any` with a specific type based on your document structure
-  isPending: boolean;
-  error: string | null;
-  success: boolean;
-};
-
-// Define the possible action types
-type FirestoreAction =
-  | { type: 'IS_PENDING' }
-  | { type: 'ADDED_DOCUMENT'; payload: any } // Replace `any` with the appropriate document type
-  | { type: 'DELETED_DOCUMENT' }
-  | { type: 'ERROR'; payload: string };
+import {
+  FirestoreAction,
+  FirestoreState,
+  UseFirestoreReturn,
+} from '@/types/useFirestoreTypes';
 
 // Initial state
 const initialState: FirestoreState = {
@@ -79,13 +69,6 @@ const firestoreReducer = (
     default:
       return state;
   }
-};
-
-// Define the return type for the hook
-type UseFirestoreReturn = {
-  addDocument: (doc: any) => Promise<void>;
-  deleteDocument: (id: string) => Promise<void>;
-  response: FirestoreState;
 };
 
 export const useFirestore = (collectionRef: string): UseFirestoreReturn => {

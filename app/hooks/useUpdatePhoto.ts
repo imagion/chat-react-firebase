@@ -4,11 +4,7 @@ import { useAuthContext } from '@/hooks/useAuthContext';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storage } from '@/lib/firebase';
 import { updateProfile, User } from 'firebase/auth';
-
-// Define the return type of the hook
-type UseUpdatePhotoReturn = {
-  update: (thumbnail: File) => Promise<void>;
-};
+import { UseUpdatePhotoReturn } from '@/types/useUpdatePhotoTypes';
 
 export const useUpdatePhoto = (): UseUpdatePhotoReturn => {
   const { state } = useAuthContext();

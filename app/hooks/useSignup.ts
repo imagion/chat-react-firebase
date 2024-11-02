@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useReducer, useRef } from 'react';
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -11,97 +11,101 @@ import {
 import { auth, db } from '@/lib/firebase';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import { doc, setDoc } from 'firebase/firestore';
+import { Action, State } from '@/types/useSignupTypes';
+import { AuthAction } from '@/types/AuthContextTypes';
+
+const initialState: State = {
+  error: null,
+  isPending: false,
+};
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'SET_ERROR':
+      return { ...state, error: action.payload };
+    case 'SET_PENDING':
+      return { ...state, isPending: action.payload };
+    default:
+      return state;
+  }
+};
 
 export const useSignup = () => {
-  const [error, setError] = useState<string | null>(null);
-  const [isPending, setIsPending] = useState<boolean>(false);
-  const [isCancelled, setIsCancelled] = useState<boolean>(false);
-  const { dispatch } = useAuthContext();
-  const provider = new GoogleAuthProvider();
+  const [state, dispatchState] = useReducer(reducer, initialState);
+  const { dispatch }: { dispatch: React.Dispatch<AuthAction> } =
+    useAuthContext();
+  const isCancelled = useRef<boolean>(false);
+  const provider = useMemo(() => new GoogleAuthProvider(), []);
 
-  // NOTE: maybe I can merge this functions to prevent DRY code
+  // centralized error handling
+  const handleError = (err: unknown) => {
+    if (!isCancelled.current && err instanceof Error) {
+      console.error(err.message);
+      dispatchState({ type: 'SET_ERROR', payload: err.message });
+      dispatchState({ type: 'SET_PENDING', payload: false });
+    }
+  };
+
+  // handle both, password and google signups
+  const handleAuthResponse = async (
+    res: UserCredential,
+    displayName?: string,
+  ) => {
+    if (!res) throw new Error('Could not complete signup');
+
+    if (displayName) {
+      await updateProfile(res.user, { displayName });
+      await setDoc(doc(db, 'users', res.user.uid), {
+        online: true,
+        displayName,
+        photoURL: res.user.photoURL || null,
+      });
+    }
+
+    dispatch({ type: 'LOGIN', payload: res.user });
+    if (!isCancelled.current) {
+      dispatchState({ type: 'SET_ERROR', payload: null });
+      dispatchState({ type: 'SET_PENDING', payload: false });
+    }
+  };
 
   const signupWithEmailAndPassword = async (
     email: string,
     password: string,
     displayName: string,
-  ): Promise<void> => {
-    setError(null);
-    setIsPending(true);
-
-    // sign in user
+  ) => {
+    dispatchState({ type: 'SET_ERROR', payload: null });
+    dispatchState({ type: 'SET_PENDING', payload: true });
     try {
-      const res: UserCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-
-      // check if we have not recieved a response
-      if (!res) {
-        throw new Error('Could not complete signup');
-      }
-
-      // add 'displayName' meta to newly created user
-      await updateProfile(res.user, { displayName });
-
-      // create a user document
-      setDoc(doc(db, 'users', res.user.uid), {
-        online: true,
-        displayName,
-        photoURL: null,
-      });
-
-      // dispatch login action
-      dispatch({ type: 'LOGIN', payload: res.user });
-
-      // update state
-      if (!isCancelled) {
-        setError(null);
-        setIsPending(false);
-      }
-    } catch (err: any) {
-      if (!isCancelled) {
-        console.log(err.message);
-        setError(err.message);
-        setIsPending(false);
-      }
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      await handleAuthResponse(res, displayName);
+    } catch (err) {
+      handleError(err);
     }
   };
 
-  const signupWithGoogle = async (): Promise<void> => {
-    setError(null);
-    setIsPending(true);
-
-    // sign in user via google
+  const signupWithGoogle = async () => {
+    dispatchState({ type: 'SET_ERROR', payload: null });
+    dispatchState({ type: 'SET_PENDING', payload: true });
     try {
-      const res: UserCredential = await signInWithPopup(auth, provider);
-
-      // check if we have not recieved a response
-      if (!res) {
-        throw new Error('Could not complete signup');
-      }
-
-      dispatch({ type: 'LOGIN', payload: res.user });
-
-      // update state
-      if (!isCancelled) {
-        setError(null);
-        setIsPending(false);
-      }
-    } catch (err: any) {
-      if (!isCancelled) {
-        console.log(err.message);
-        setError(err.message);
-        setIsPending(false);
-      }
+      const res = await signInWithPopup(auth, provider);
+      await handleAuthResponse(res);
+    } catch (err) {
+      handleError(err);
     }
   };
 
   // cleanup function
   useEffect(() => {
-    return () => setIsCancelled(true);
+    return () => {
+      isCancelled.current = true;
+    };
   }, []);
 
-  return { error, isPending, signupWithEmailAndPassword, signupWithGoogle };
+  return {
+    error: state.error,
+    isPending: state.isPending,
+    signupWithEmailAndPassword,
+    signupWithGoogle,
+  };
 };
