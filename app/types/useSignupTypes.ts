@@ -4,5 +4,5 @@ export type State = {
 };
 
 export type Action =
-  | { type: 'SET_ERROR'; payload: string | null }
-  | { type: 'SET_PENDING'; payload: boolean };
+  | { type: 'ERROR'; payload: string | null }
+  | { type: 'IS_PENDING'; payload: boolean };

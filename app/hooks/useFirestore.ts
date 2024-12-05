@@ -31,7 +31,6 @@ const firestoreReducer = (
 ): FirestoreState => {
   switch (action.type) {
     case 'IS_PENDING':
-      console.log('Reducer: IS_PENDING');
       return {
         ...state,
         isPending: true,
@@ -40,7 +39,6 @@ const firestoreReducer = (
         success: false,
       };
     case 'ADDED_DOCUMENT':
-      console.log('Reducer: ADDED_DOCUMENT', action.payload);
       return {
         ...state,
         isPending: false,
@@ -49,7 +47,6 @@ const firestoreReducer = (
         success: true,
       };
     case 'DELETED_DOCUMENT':
-      console.log('Reducer: DELETED_DOCUMENT');
       return {
         ...state,
         isPending: false,
@@ -58,7 +55,6 @@ const firestoreReducer = (
         success: true,
       };
     case 'ERROR':
-      console.log('Reducer: ERROR');
       return {
         ...state,
         isPending: false,
@@ -81,15 +77,12 @@ export const useFirestore = (collectionRef: string): UseFirestoreReturn => {
     const createdAt = Timestamp.fromDate(new Date());
 
     try {
-      const addedDocument = await addDoc(collection(db, collectionRef), {
+      await addDoc(collection(db, collectionRef), {
         ...doc,
         createdAt,
       });
 
-      console.log('Document added successfully:', addedDocument);
-
       if (!isCancelled) {
-        console.log('Dispatching action:', addDocument);
         dispatch({ type: 'ADDED_DOCUMENT', payload: addDocument });
       }
     } catch (err: any) {
@@ -109,7 +102,7 @@ export const useFirestore = (collectionRef: string): UseFirestoreReturn => {
     try {
       const docRef = doc(db, collectionRef, id); // Reference to the document
 
-      // NOTE: Improve UX with better error handling, but cause additionnal read operation from Firestore
+      // NOTE: Improve UX with better error handling, but cause additional read operation from Firestore
       // Additional check if the document exists
       // const docSnap = await getDoc(docRef); // check if the document exists
       // if (!docSnap.exists()) {

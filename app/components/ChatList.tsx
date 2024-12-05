@@ -97,7 +97,7 @@ export default function ChatList() {
                     width={40}
                     height={40}
                     alt='User Avatar'
-                    className='mt-1 rounded-full bg-neutral-300 p-1'
+                    className='mt-1 rounded-full'
                   />
                 ) : (
                   <DiscordLogo

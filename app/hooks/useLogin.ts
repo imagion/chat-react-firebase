@@ -21,6 +21,7 @@ export const useLogin = () => {
 
       // dispatch login action
       dispatch({ type: 'LOGIN', payload: res.user });
+      dispatch({ type: 'SIGNUP_COMPLETE' });
 
       // update state
       if (!isCancelled) {
@@ -29,7 +30,7 @@ export const useLogin = () => {
       }
     } catch (err: any) {
       if (!isCancelled) {
-        console.log(err.message);
+        console.error(err.message);
         setError(err.message);
         setIsPending(false);
       }

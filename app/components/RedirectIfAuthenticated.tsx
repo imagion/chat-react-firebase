@@ -3,6 +3,7 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '@/hooks/useAuthContext';
+import Loading from '@/components/Loading';
 
 interface RedirectIfAuthenticatedProps {
   children: ReactNode;
@@ -14,23 +15,25 @@ export default function RedirectIfAuthenticated({
   const [isChecking, setIsChecking] = useState(true);
   const router = useRouter();
   const { state } = useAuthContext();
-  const { user, authIsReady } = state;
+  const { user, authIsReady, isSignupComplete } = state;
 
   useEffect(() => {
-    if (authIsReady) {
-      if (user) {
-        // Redirect if already authenticated
+    try {
+      if (authIsReady && user && isSignupComplete) {
+        // If the user exists and signup is complete, redirect
         router.push('/');
       } else {
-        // Stop checking once we know the user is authenticated
         setIsChecking(false);
       }
+    } catch (err) {
+      console.error('Error during authentication check:', err);
+      setIsChecking(false);
     }
-  }, [authIsReady, user]);
+  }, [authIsReady, isSignupComplete, user]);
 
-  // If auth state is not ready yet, return nothing or a loading spinner
+  // Show a loading state while checking
   if (isChecking || !authIsReady) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return <>{children}</>;

@@ -21,9 +21,9 @@ const initialState: State = {
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case 'SET_ERROR':
+    case 'ERROR':
       return { ...state, error: action.payload };
-    case 'SET_PENDING':
+    case 'IS_PENDING':
       return { ...state, isPending: action.payload };
     default:
       return state;
@@ -41,8 +41,8 @@ export const useSignup = () => {
   const handleError = (err: unknown) => {
     if (!isCancelled.current && err instanceof Error) {
       console.error(err.message);
-      dispatchState({ type: 'SET_ERROR', payload: err.message });
-      dispatchState({ type: 'SET_PENDING', payload: false });
+      dispatchState({ type: 'ERROR', payload: err.message });
+      dispatchState({ type: 'IS_PENDING', payload: false });
     }
   };
 
@@ -63,9 +63,10 @@ export const useSignup = () => {
     }
 
     dispatch({ type: 'LOGIN', payload: res.user });
+
     if (!isCancelled.current) {
-      dispatchState({ type: 'SET_ERROR', payload: null });
-      dispatchState({ type: 'SET_PENDING', payload: false });
+      dispatchState({ type: 'ERROR', payload: null });
+      dispatchState({ type: 'IS_PENDING', payload: false });
     }
   };
 
@@ -74,22 +75,25 @@ export const useSignup = () => {
     password: string,
     displayName: string,
   ) => {
-    dispatchState({ type: 'SET_ERROR', payload: null });
-    dispatchState({ type: 'SET_PENDING', payload: true });
+    dispatchState({ type: 'ERROR', payload: null });
+    dispatchState({ type: 'IS_PENDING', payload: true });
+
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       await handleAuthResponse(res, displayName);
+      dispatch({ type: 'SIGNUP_COMPLETE' });
     } catch (err) {
       handleError(err);
     }
   };
 
   const signupWithGoogle = async () => {
-    dispatchState({ type: 'SET_ERROR', payload: null });
-    dispatchState({ type: 'SET_PENDING', payload: true });
+    dispatchState({ type: 'ERROR', payload: null });
+    dispatchState({ type: 'IS_PENDING', payload: true });
     try {
       const res = await signInWithPopup(auth, provider);
       await handleAuthResponse(res);
+      dispatch({ type: 'SIGNUP_COMPLETE' });
     } catch (err) {
       handleError(err);
     }

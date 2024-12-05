@@ -15,6 +15,7 @@ import { AuthAction, AuthState } from '@/types/AuthContextTypes';
 const initialState: AuthState = {
   user: null,
   authIsReady: false,
+  isSignupComplete: false,
 };
 
 export const AuthContext = createContext<
@@ -32,6 +33,8 @@ export const authReducer = (
       return { ...state, user: null };
     case 'AUTH_IS_READY':
       return { ...state, user: action.payload, authIsReady: true };
+    case 'SIGNUP_COMPLETE':
+      return { ...state, isSignupComplete: true };
     default:
       return state;
   }

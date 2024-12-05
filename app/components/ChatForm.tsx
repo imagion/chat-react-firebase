@@ -20,14 +20,10 @@ export default function ChatForm() {
 
   // Reset the form field when the document is successfully added
   useEffect(() => {
-    // console.log('Response success changed:', response.success);
     if (response.success) {
-      console.log('-------Second Render: SetMessage("")');
       setMessage('');
     }
   }, [response.success]);
-
-  // FIX: Понять почему useEffect не срабатывает и почему reducer не выполняет 'ADDED_DOCUMENT'
 
   return (
     <form className='px-4' onSubmit={handleSubmit}>
