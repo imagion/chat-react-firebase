@@ -1,3 +1,3 @@
 export type UseUpdatePhotoReturn = {
-  update: (thumbnail: File) => Promise<void>;
+  update: (thumbnail: File, clientId: string) => Promise<void>;
 };

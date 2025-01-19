@@ -14,6 +14,8 @@ export default function UserProfile() {
   const { state } = useAuthContext();
   const { update } = useUpdatePhoto();
 
+  const clientId = process.env.NEXT_PUBLIC_IMGUR_CLIENT_ID;
+
   // error handling for different cases
   const validateFile = (selected: File | null): string | null => {
     if (!selected) return 'Пожалуйста, выберите файл';
@@ -35,7 +37,11 @@ export default function UserProfile() {
 
     setIsLoading(true);
     try {
-      await update(thumbnail as File);
+      if (clientId) {
+        await update(thumbnail as File, clientId);
+      } else {
+        throw new Error('Client ID is not set');
+      }
       setThumbnail(null);
       setThumbnailError(null);
       setIsOpen(false);

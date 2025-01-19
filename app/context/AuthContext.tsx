@@ -3,6 +3,7 @@
 import {
   createContext,
   Dispatch,
+  PropsWithChildren,
   ReactNode,
   useEffect,
   useReducer,
@@ -40,15 +41,9 @@ export const authReducer = (
   }
 };
 
-// Define the props for the AuthContextProvider
-type AuthContextProviderProps = {
-  children: ReactNode;
-};
-
-export default function AuthContextProvider({
-  children,
-}: AuthContextProviderProps) {
+export default function AuthContextProvider({ children }: PropsWithChildren) {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  console.log('🚀 -> AuthContextProvider -> state:', state);
 
   // get user information from firebase on first render
   useEffect(() => {

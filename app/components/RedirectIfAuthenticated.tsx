@@ -1,17 +1,13 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import Loading from '@/components/Loading';
 
-interface RedirectIfAuthenticatedProps {
-  children: ReactNode;
-}
-
 export default function RedirectIfAuthenticated({
   children,
-}: RedirectIfAuthenticatedProps) {
+}: PropsWithChildren) {
   const [isChecking, setIsChecking] = useState(true);
   const router = useRouter();
   const { state } = useAuthContext();

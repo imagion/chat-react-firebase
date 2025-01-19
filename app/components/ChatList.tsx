@@ -8,14 +8,9 @@ import { useAuthContext } from '@/hooks/useAuthContext';
 import { useCollection } from '@/hooks/useCollection';
 import { useFirestore } from '@/hooks/useFirestore';
 import DiscordLogo from '@/public/discord.svg';
+import { UserInfo } from '@/types/ChatListTypes';
 
 // NOTE: Consider memoizing the mapped elements (like individual li items) using React.memo()
-
-// Define the interface for user information
-interface UserInfo {
-  displayName: string;
-  photoURL: string | null;
-}
 
 export default function ChatList() {
   const { state } = useAuthContext();
@@ -73,7 +68,7 @@ export default function ChatList() {
   return (
     <ul className='scroller inset-0 flex flex-auto flex-col justify-end gap-2 overflow-x-hidden overflow-y-scroll pl-4 pr-12'>
       {error && <p className='text-red-500'>error</p>}
-      {!documents && <div>Loading...</div>}
+      {!documents && <div>No messages</div>}
 
       {documents &&
         documents.map((doc) => {

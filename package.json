@@ -14,6 +14,7 @@
   "dependencies": {
     "@floating-ui/react": "^0.26.24",
     "@next/env": "^14.2.13",
+    "axios": "^1.7.9",
     "clsx": "^2.1.1",
     "firebase": "^10.13.2",
     "firebase-admin": "^12.5.0",

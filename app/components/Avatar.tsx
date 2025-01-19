@@ -1,13 +1,7 @@
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import DiscordLogo from '@/public/discord.svg';
-
-interface AvatarProps {
-  src: string;
-  size: number;
-}
-
-// FIX: Avatar styling
+import { AvatarProps } from '@/types/AvatarTypes';
 
 export default function Avatar({ src, size }: AvatarProps) {
   return (
